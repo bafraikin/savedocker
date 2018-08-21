@@ -3,11 +3,9 @@ FROM debian:jessie
 RUN apt-get update && apt-get install -y xvfb iceweasel
 RUN apt-get install -y ruby bundler git
 RUN gem install selenium-webdriver
-RUN gem install watir
-RUN gem install headless
+RUN gem install watir-webdriver
 
 ADD xvfb-firefox /usr/bin/xvfb-firefox
-ADD geckodriver /usr/bin/geckodriver
 RUN rm /usr/bin/firefox
 RUN ln -s /usr/bin/xvfb-firefox /usr/bin/firefox
 
