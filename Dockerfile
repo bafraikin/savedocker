@@ -1,15 +1,20 @@
-FROM debian:jessie
+FROM ruby:2.5.1
 
-RUN apt-get update && apt-get install -y xvfb iceweasel
-RUN apt-get install -y ruby bundler git
-RUN gem install selenium-webdriver
-RUN gem install watir-webdriver
+ENV LANG C.UTF-8
 
-ADD xvfb-firefox /usr/bin/xvfb-firefox
-RUN rm /usr/bin/firefox
-RUN ln -s /usr/bin/xvfb-firefox /usr/bin/firefox
+RUN apt-get update && apt-get install -y xvfb iceweasel chromedriver
+RUN apt-get install -y bundler git
 
-#WORKDIR /app
+#ADD xvfb-firefox /usr/bin/xvfb-firefox
+#ADD chromedriver /usr/bin/chromedriver
+#RUN rm /usr/bin/firefox
+#RUN ln -s /usr/bin/xvfb-firefox /usr/bin/firefox
+
+WORKDIR /app
+RUN mkdir /app/vendor 
+ADD kimurai /app/vendor/kimurai
+ADD Gemfile /app/Gemfile
 ADD duck.rb /app/duck.rb
 ADD URL /app/URL
+RUN bundle install --gemfile=/app/Gemfile
 
