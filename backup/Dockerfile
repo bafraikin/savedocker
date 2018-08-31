@@ -2,11 +2,9 @@ FROM ruby:2.5.1
 
 ENV LANG C.UTF-8
 
-RUN apt-get update && apt-get install -y xvfb iceweasel chromedriver
-RUN apt-get install -y bundler git python-pip
-
+RUN apt-get update && apt-get install -y xvfb iceweasel chromedriver pip
+RUN apt-get install -y bundler git
 RUN pip install awscli --upgrade --user
-RUN echo 'export PATH=$PATH:/root/.local/bin' >> /root/.bashrc
 
 #ADD xvfb-firefox /usr/bin/xvfb-firefox
 ADD chromedriver /usr/local/bin/chromedriver
