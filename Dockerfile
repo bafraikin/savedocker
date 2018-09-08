@@ -8,6 +8,7 @@ RUN apt-get install -y bundler git python-pip
 RUN pip install awscli --upgrade --user
 RUN echo 'export PATH=$PATH:/root/.local/bin' >> /root/.bashrc
 
+
 #ADD xvfb-firefox /usr/bin/xvfb-firefox
 ADD chromedriver /usr/local/bin/chromedriver
 #RUN rm /usr/bin/firefox
@@ -17,7 +18,7 @@ WORKDIR /app
 RUN mkdir /app/vendor 
 ADD kimurai /app/vendor/kimurai
 ADD Gemfile /app/Gemfile
-ADD retry.rb /app/retry.rb
+ADD real.rb /app/real.rb
 ADD URL /app/URL
 RUN bundle install --gemfile=/app/Gemfile
 
