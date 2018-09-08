@@ -19,6 +19,8 @@ RUN mkdir /app/vendor
 ADD kimurai /app/vendor/kimurai
 ADD Gemfile /app/Gemfile
 ADD real.rb /app/real.rb
+ADD retry.rb /app/retry.rb
+ADD tryons.rb /app/tryons.rb
 ADD URL /app/URL
 RUN bundle install --gemfile=/app/Gemfile
 

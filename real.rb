@@ -15,8 +15,8 @@ class InfiniteScrollCrawler < Kimurai::Base
     binding.pry
 
     loop do
-      browser.execute_script("document.getElementsByClassName('gsfi')[0].value = site:#{Hebdo.next.split("!")[2].to_s}") ; sleep 2
-      a = browser.find(:xpath, '/html/body/div/div[3]/form/div[2]/div[3]/center/input[1]')
+      a = browser.first(:css, '.gsfi')
+      a.set("site:#{Hebdo.next.split("!")[2].to_s}") ; sleep 2
       a.send_keys(:enter)
       response = browser.current_response
       binding.pry
