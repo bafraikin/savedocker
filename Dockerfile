@@ -2,7 +2,7 @@ FROM ruby:2.5.1
 
 ENV LANG C.UTF-8
 
-RUN apt-get update && apt-get install -y xvfb iceweasel chromedriver
+RUN apt-get update && apt-get install -y xvfb iceweasel chromedriver vim
 RUN apt-get install -y bundler git python-pip
 
 RUN pip install awscli --upgrade --user

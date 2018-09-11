@@ -1,6 +1,7 @@
 require 'bundler/setup'
 require 'kimurai'
 require 'kimurai/all'
+require 'pry'
 
 class GithubCrawler < Kimurai::Base
   @name = "github_crawler"
