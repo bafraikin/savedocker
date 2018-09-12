@@ -52,11 +52,29 @@ class InfiniteScrollCrawler < Kimurai::Base
     end
   end
 
+
   def parse_hebdo_page(response, url:, data: {})
     item = {}
-    item[:hebdo] = data[name]
-    save_to "results.json", item, format: :pretty_json
+    text = ""
+    response.css('p').each_with_index do |para, index|
+      if index < 10
+        text += para.text
+      else
+        break   
+      end
+    end
+    item[:date] = CommonRegex.new(text).get_dates[0]
+    item[:title] = response.title
+    item[:url] = url
+    item[:description] = text.split("\n").max_by(&:length)
+    binding.pry
+    puts response.css("img")
+    #       save_to "results.json", item, format: :pretty_json
   end
 end
 
-InfiniteScrollCrawler.start!
+a =  GoogleCrawler.new
+a.parse_hebdo_page(Nokogiri::HTML(open('http://www.lavoixdunord.fr/archive/recup/region/accident-ferroviaire-a-arneke-deux-cents-passagers-bloques-le-trafic-des-trains-interrompu-ia37b0n267583#')), url: "http://www.lavoixdunord.fr/archive/recup/region/accident-ferroviaire-a-arneke-deux-cents-passagers-bloques-le-trafic-des-trains-interrompu-ia37b0n267583#")
+
+
+
