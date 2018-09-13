@@ -2,7 +2,7 @@ FROM ruby:2.5.1
 
 ENV LANG C.UTF-8
 
-RUN apt-get update && apt-get install -y xvfb iceweasel chromedriver vim
+RUN apt-get update && apt-get install -y xvfb chromedriver vim
 RUN apt-get install -y bundler git python-pip
 
 RUN pip install awscli --upgrade --user
@@ -17,11 +17,8 @@ ADD chromedriver /usr/local/bin/chromedriver
 WORKDIR /app
 RUN mkdir /app/vendor 
 ADD kimurai /app/vendor/kimurai
-ADD metainspector /app/vendor/metainspector
 ADD Gemfile /app/Gemfile
 ADD real.rb /app/real.rb
-ADD retry.rb /app/retry.rb
-ADD tryons.rb /app/tryons.rb
 ADD URL /app/URL
 RUN bundle install --gemfile=/app/Gemfile
 

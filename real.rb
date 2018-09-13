@@ -1,9 +1,8 @@
 require 'bundler/setup'
 require 'kimurai'
 require 'kimurai/all'
-require 'pry'
-require 'metainspector'
 require 'commonregex'
+require 'chronic'
 
 class Hebdo
   def self.next
@@ -38,13 +37,11 @@ class GoogleCrawler < Kimurai::Base
     end
     response = browser.current_response
     if (result = response.css(url_result_path).map{|c| c[:href]}) != []
-=begin
             result.each do |url_result|
-        request_to :parse_result_page, url: url_result, data: {
+        request_to :parse_hebdo_page, url: url_result, data: {
           name: hebdo_name
         }
         end
-=end
       logger.info result
       if (btn_next = response.css(next_path)).first != nil  && ( data[:nbr] == nil || data[:nbr] < 2)
         request_to :parse, url: absolute_url(btn_next.first[:href], base: url), data: {boolean: true, nbr: (data[:nbr] || 0) + 1} 
@@ -54,6 +51,18 @@ class GoogleCrawler < Kimurai::Base
     end
   end
 
+  def get_description(response)
+    candidate = response.search("meta[name='description'], meta[name='og:description'],meta[name='twitter:description']").map {|n| n['content']}
+    candidate << response.description
+    candidate << response.search('//p[string-length() >= 120]').first
+    candidate.find { |x| !x.to_s.empty? }
+  end
+
+  def get_biggest_img(response, url)
+    img = response.search('//img').select {|img| img['src']}
+    imgs_with_size = img.map { |imgs| [absolute_url(imgs['src'], base: url), imgs['width'] || imgs['data-width'], imgs['height'] || imgs['data-height']]}
+    biggest = imgs_with_size.sort_by { |url, width, height| -(width.to_i * height.to_i) }.first
+  end
 
   def parse_hebdo_page(response, url:, data: {})
     item = {}
@@ -65,18 +74,14 @@ class GoogleCrawler < Kimurai::Base
         break   
       end
     end
-    item[:date] = CommonRegex.new(text).get_dates[0]
+    item[:hebdo_name] = data['name']
+    item[:date] = Chronic.parse(CommonRegex.new(text).get_dates[0] || /\d{2}\.\d{2}\.\d{2,4}/.match(text)[0])
     item[:title] = response.title
     item[:url] = url
-    item[:description] = text.split("\n").max_by(&:length)
-    binding.pry
-    puts response.css("img")
+    item[:description] = get_description(response)
+    item[:body] = text
+    item[:biggest_img] = get_biggest_img(response, url)[0]
     #       save_to "results.json", item, format: :pretty_json
   end
 end
-
-a =  GoogleCrawler.new
-a.parse_hebdo_page(Nokogiri::HTML(open('http://www.lavoixdunord.fr/archive/recup/region/accident-ferroviaire-a-arneke-deux-cents-passagers-bloques-le-trafic-des-trains-interrompu-ia37b0n267583#')), url: "http://www.lavoixdunord.fr/archive/recup/region/accident-ferroviaire-a-arneke-deux-cents-passagers-bloques-le-trafic-des-trains-interrompu-ia37b0n267583#")
-
-
 
