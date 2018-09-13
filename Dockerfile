@@ -11,6 +11,7 @@ RUN echo 'export PATH=$PATH:/root/.local/bin' >> /root/.bashrc
 
 #ADD xvfb-firefox /usr/bin/xvfb-firefox
 ADD chromedriver /usr/local/bin/chromedriver
+ADD config.sh /app/config.sh
 #RUN rm /usr/bin/firefox
 #RUN ln -s /usr/bin/xvfb-firefox /usr/bin/firefox
 
