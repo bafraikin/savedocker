@@ -2,6 +2,8 @@ require 'bundler/setup'
 require 'kimurai'
 require 'kimurai/all'
 require 'pry'
+require 'metainspector'
+require 'commonregex'
 
 class Hebdo
   def self.next
@@ -17,7 +19,7 @@ class Hebdo
   end
 end
 
-class InfiniteScrollCrawler < Kimurai::Base
+class GoogleCrawler < Kimurai::Base
   @name = "infinite_scroll_crawler"
   @driver = :selenium_chrome
   @start_urls = ["https://www.google.com"]

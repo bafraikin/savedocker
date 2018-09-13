@@ -17,6 +17,7 @@ ADD chromedriver /usr/local/bin/chromedriver
 WORKDIR /app
 RUN mkdir /app/vendor 
 ADD kimurai /app/vendor/kimurai
+ADD metainspector /app/vendor/metainspector
 ADD Gemfile /app/Gemfile
 ADD real.rb /app/real.rb
 ADD retry.rb /app/retry.rb
